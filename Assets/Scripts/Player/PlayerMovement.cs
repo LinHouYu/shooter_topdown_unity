@@ -89,17 +89,17 @@ public class PlayerMovement : MonoBehaviour
             //根据玩家的移动方向来切换动画IsWalking参数
             bool isWalking = horizontal != 0f || vertical != 0f;
             animator.SetBool("IsWalking", isWalking);
-            //如果玩家正在移动，则播放行走动画
-            if (isWalking)
-            {
-                animator.SetFloat("Horizontal", horizontal);
-                animator.SetFloat("Vertical", vertical);
-            }
-            else
-            {
-                animator.SetFloat("Horizontal", 0f);
-                animator.SetFloat("Vertical", 0f);
-            }
+            ////如果玩家正在移动，则播放行走动画
+            //if (isWalking)
+            //{
+            //    animator.SetFloat("Horizontal", horizontal);
+            //    animator.SetFloat("Vertical", vertical);
+            //}
+            //else
+            //{
+            //    animator.SetFloat("Horizontal", 0f);
+            //    animator.SetFloat("Vertical", 0f);
+            //}
 
         }
     }

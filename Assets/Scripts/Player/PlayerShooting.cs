@@ -8,6 +8,8 @@ public class PlayerShooting : MonoBehaviour
     public float fireRate = 0.10f; //射击间隔时间
     private Light gunLight; //枪口光
     private float lightDuration = 0.5f; //枪口光持续时间
+    private LineRenderer gunLine; //获取LineRenderer组件
+    private ParticleSystem gunParticle; //获取粒子系统组件
 
 
     //玩家射击脚本
@@ -30,6 +32,11 @@ public class PlayerShooting : MonoBehaviour
         {
             gunLight.enabled = false;
         }
+        //获取LineRenderer组件
+        gunLine = GetComponent<LineRenderer>();
+        gunParticle = GetComponentInChildren<ParticleSystem>();
+
+
     }
     void Update()
     {
@@ -44,18 +51,24 @@ public class PlayerShooting : MonoBehaviour
         if (time >= (fireRate * lightDuration))
         {
             gunLight.enabled = false; // 关闭枪口光
-   
+            gunLine.enabled = false; // 关闭LineRenderer
         }
 
     }
     void Shoot()
     {
+        time = 0f; // Reset the time after shooting
         //在这里实现射击逻辑
         Debug.Log("Player is shooting!");
         Debug.Log(DateTime.Now.ToString("G"));
-        GunAudio.Play();
-        time = 0f; // Reset the time after shooting
         gunLight.enabled = true; // 开启枪口光
-        
+        gunLine.SetPosition(0, transform.position); // 设置LineRenderer的起点为玩家位置
+        gunLine.SetPosition(1, transform.position + transform.forward * 100f); // 设置LineRenderer的终点为玩家前方100单位
+        gunLine.enabled = true;
+        gunParticle.Play(); // 播放枪口粒子效果
+        // 播放枪声
+        GunAudio.Play();
+
+
     }
 }
