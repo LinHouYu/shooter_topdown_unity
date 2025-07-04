@@ -23,6 +23,15 @@ public class PlayerMovement : MonoBehaviour
         //让玩家可以通过键盘的方向键或WASD键来移动
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
+        //按住shift键加速移动
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            moveSpeed = 10f; // 按住Shift键时加速
+        }
+        else
+        {
+            moveSpeed = 6f; // 恢复正常速度
+        }
         // 通过摄像机的方向来计算移动方向 这里设置了摄像机的y轴为0，避免玩家在y轴上移动
         Vector3 movement = new Vector3(horizontal, 0f, vertical);
         movement = movement.normalized * moveSpeed * Time.deltaTime;

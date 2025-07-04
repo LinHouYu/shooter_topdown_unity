@@ -86,12 +86,7 @@ public class PlayerShooting : MonoBehaviour
             MyEnemyHealth enemyHealth = shootHit.collider.GetComponent<MyEnemyHealth>(); // 假设有一个MyEnemyHealth脚本处理敌人生命值
             if (enemyHealth != null) // 检查敌人生命值脚本是否存在
             {
-                enemyHealth.TakeDamage(10, shootHit.point); // 调用敌人脚本中的TakeDamage方法
-                enemyAnimator = shootHit.collider.GetComponent<Animator>(); // 获取敌人的Animator组件
-                if (enemyAnimator != null) // 确保Animator组件存在
-                {
-                    enemyAnimator.SetTrigger("Death"); // 确保Animator参数名为Death
-                }
+                enemyHealth.TakeDamage(10, shootHit.point); // 只调用扣血，不再直接触发动画
             }
         }
         else
