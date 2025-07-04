@@ -87,8 +87,10 @@ public class PlayerShooting : MonoBehaviour
             MyEnemyHealth enemyHealth = shootHit.collider.GetComponent<MyEnemyHealth>(); // 假设有一个MyEnemyHealth脚本处理敌人生命值
             if (enemyHealth != null) // 检查敌人生命值脚本是否存在
             {
-                enemyHealth.health -= 10; // 减少敌人生命值
-                Debug.Log("Enemy hit! Health remaining: " + enemyHealth.health);
+                //enemyHealth.health -= 10; // 减少敌人生命值
+                //Debug.Log("Enemy hit! Health remaining: " + enemyHealth.health);
+                enemyHealth.TakeDamage(10, shootHit.point); // 调用敌人脚本中的TakeDamage方法
+                
             }
         }
         else
