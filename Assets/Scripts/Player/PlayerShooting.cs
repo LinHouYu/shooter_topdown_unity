@@ -11,6 +11,10 @@ public class PlayerShooting : MonoBehaviour
     private LineRenderer gunLine; //获取LineRenderer组件
     private ParticleSystem gunParticle; //获取粒子系统组件
 
+    //开枪发射射线相关变量
+    private Ray ShootRay; //射线
+    private RaycastHit shootHit; //射线碰撞信息
+    private int shootMask; //射线检测的图层
 
     //玩家射击脚本
     private void Awake()
@@ -35,6 +39,9 @@ public class PlayerShooting : MonoBehaviour
         //获取LineRenderer组件
         gunLine = GetComponent<LineRenderer>();
         gunParticle = GetComponentInChildren<ParticleSystem>();
+        //获取射线检测的图层
+        shootMask = LayerMask.GetMask("Shootable"); // 假设你有一个名为"Shootable"的图层
+
 
 
     }
@@ -68,7 +75,26 @@ public class PlayerShooting : MonoBehaviour
         gunParticle.Play(); // 播放枪口粒子效果
         // 播放枪声
         GunAudio.Play();
-
-
+        // 射击逻辑可以在这里实现，比如检测射线碰撞等
+        //定义ray, 定义一个mask定义 Hit
+        if(Physics.Raycast(transform.position, transform.forward, out shootHit, 100f, shootMask))
+        {
+            gunLine.SetPosition(1, shootHit.point); // 设置LineRenderer的终点为射线碰撞点
+            //如果射线检测到物体
+            Debug.Log("Hit: " + shootHit.collider.name);
+            //在这里可以添加击中物体的逻辑，比如伤害计算等
+            //例如：shootHit.collider.GetComponent<Enemy>().TakeDamage(damageAmount);
+            MyEnemyHealth enemyHealth = shootHit.collider.GetComponent<MyEnemyHealth>(); // 假设有一个MyEnemyHealth脚本处理敌人生命值
+            if (enemyHealth != null) // 检查敌人生命值脚本是否存在
+            {
+                enemyHealth.health -= 10; // 减少敌人生命值
+                Debug.Log("Enemy hit! Health remaining: " + enemyHealth.health);
+            }
+        }
+        else
+        {
+            gunLine.SetPosition(1, transform.position + transform.forward * 100f);
+            Debug.Log("Missed!");
+        }
     }
-}
+}   
