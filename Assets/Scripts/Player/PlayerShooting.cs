@@ -10,6 +10,7 @@ public class PlayerShooting : MonoBehaviour
     private float lightDuration = 0.5f; //枪口光持续时间
     private LineRenderer gunLine; //获取LineRenderer组件
     private ParticleSystem gunParticle; //获取粒子系统组件
+    private Animator enemyAnimator; // 添加Animator变量
 
     //开枪发射射线相关变量
     private Ray ShootRay; //射线
@@ -41,10 +42,8 @@ public class PlayerShooting : MonoBehaviour
         gunParticle = GetComponentInChildren<ParticleSystem>();
         //获取射线检测的图层
         shootMask = LayerMask.GetMask("Shootable"); // 假设你有一个名为"Shootable"的图层
-
-
-
     }
+
     void Update()
     {
         time += Time.deltaTime;
@@ -60,8 +59,8 @@ public class PlayerShooting : MonoBehaviour
             gunLight.enabled = false; // 关闭枪口光
             gunLine.enabled = false; // 关闭LineRenderer
         }
-
     }
+
     void Shoot()
     {
         time = 0f; // Reset the time after shooting
@@ -77,7 +76,7 @@ public class PlayerShooting : MonoBehaviour
         GunAudio.Play();
         // 射击逻辑可以在这里实现，比如检测射线碰撞等
         //定义ray, 定义一个mask定义 Hit
-        if(Physics.Raycast(transform.position, transform.forward, out shootHit, 100f, shootMask))
+        if (Physics.Raycast(transform.position, transform.forward, out shootHit, 100f, shootMask))
         {
             gunLine.SetPosition(1, shootHit.point); // 设置LineRenderer的终点为射线碰撞点
             //如果射线检测到物体
@@ -87,10 +86,12 @@ public class PlayerShooting : MonoBehaviour
             MyEnemyHealth enemyHealth = shootHit.collider.GetComponent<MyEnemyHealth>(); // 假设有一个MyEnemyHealth脚本处理敌人生命值
             if (enemyHealth != null) // 检查敌人生命值脚本是否存在
             {
-                //enemyHealth.health -= 10; // 减少敌人生命值
-                //Debug.Log("Enemy hit! Health remaining: " + enemyHealth.health);
                 enemyHealth.TakeDamage(10, shootHit.point); // 调用敌人脚本中的TakeDamage方法
-                
+                enemyAnimator = shootHit.collider.GetComponent<Animator>(); // 获取敌人的Animator组件
+                if (enemyAnimator != null) // 确保Animator组件存在
+                {
+                    enemyAnimator.SetTrigger("Death"); // 确保Animator参数名为Death
+                }
             }
         }
         else
@@ -99,4 +100,4 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log("Missed!");
         }
     }
-}   
+}
